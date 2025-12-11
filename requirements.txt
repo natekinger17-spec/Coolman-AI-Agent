@@ -1,0 +1,5 @@
+agent-framework-azure-ai
+fastapi
+uvicorn[standard]
+python-dotenv
+openai
