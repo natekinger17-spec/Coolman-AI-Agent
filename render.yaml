@@ -2,6 +2,7 @@ services:
   - type: web
     name: coolman-ai-agent
     env: python
+    runtime: python-3.13.4
     buildCommand: pip install -r requirements.txt --pre
     startCommand: uvicorn web_api:app --host 0.0.0.0 --port $PORT
     envVars:
