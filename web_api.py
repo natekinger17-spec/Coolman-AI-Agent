@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from coolman_agent import create_coolman_agent
-from agent_framework import ChatThread
+from agent_framework import AgentThread
 
 app = FastAPI(title="Coolman Fuels API")
 
