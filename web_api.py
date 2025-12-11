@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import AsyncIterator
 import os
@@ -118,6 +119,11 @@ async def chat_stream(request: ChatRequest):
 @app.get("/")
 async def root():
     return {"message": "Coolman Fuels API is running"}
+
+@app.get("/chat_widget.html")
+async def get_chat_widget():
+    """Serve the chat widget HTML file"""
+    return FileResponse("chat_widget.html", media_type="text/html")
 
 @app.get("/health")
 async def health():
