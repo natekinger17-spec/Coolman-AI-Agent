@@ -289,8 +289,9 @@
     </div>
 
     <script>
-        // Configuration - Update this URL to your API endpoint
-        const API_URL = 'http://localhost:8000';
+        // Configuration - Update this URL to your Render deployment URL
+        // Example: https://coolman-ai-agent.onrender.com
+        const API_URL = 'http://localhost:8000';  // CHANGE THIS TO YOUR RENDER URL
         let sessionId = null;
 
         async function initSession() {
@@ -356,7 +357,7 @@
             } catch (error) {
                 console.error('Error:', error);
                 showTyping(false);
-                addMessage('Sorry, I\'m having trouble connecting. Please call us at 519-235-0853 for immediate assistance.', 'bot');
+                addMessage('Sorry, I\'m having trouble connecting right now. 😔<br><br>Please call us at <strong>519-235-0853</strong> or email <strong>sales@coolmanfuels.ca</strong> for immediate assistance. We\'re here to help!', 'bot');
             }
             
             // Re-enable input

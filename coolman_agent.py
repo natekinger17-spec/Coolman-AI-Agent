@@ -1,8 +1,12 @@
 """
 Coolman Fuels Customer Support AI Agent
 ========================================
-An AI-powered chatbot to help customers navigate the Coolman Fuels website
-and get the best experience with fuel, propane, and heating oil services.
+An intelligent AI agent providing 24/7 customer support for Coolman Fuels.
+Handles inquiries about fuel delivery, propane services, pricing, coverage areas,
+and general account questions with comprehensive knowledge of company operations.
+
+Version: 1.0
+Last Updated: December 2025
 """
 
 import asyncio

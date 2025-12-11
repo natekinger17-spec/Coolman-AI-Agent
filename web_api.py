@@ -14,9 +14,10 @@ from agent_framework import ChatThread
 app = FastAPI(title="Coolman Fuels API")
 
 # Enable CORS
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify your domain
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -41,11 +42,20 @@ async def startup_event():
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    print("👋 Shutting down...")
+    global sessions
+    sessions.clear()
+    print("👋 Shutting down Coolman Fuels Agent...")
 
 @app.post("/session/new")
 async def new_session():
     """Create a new chat session"""
+    # Limit active sessions to prevent memory issues
+    if len(sessions) > 1000:
+        # Remove oldest sessions
+        oldest_keys = list(sessions.keys())[:100]
+        for key in oldest_keys:
+            del sessions[key]
+    
     session_id = os.urandom(16).hex()
     sessions[session_id] = agent.get_new_thread()
     return {"session_id": session_id}
@@ -56,24 +66,32 @@ async def chat(request: ChatRequest):
     if not agent:
         raise HTTPException(status_code=500, detail="Agent not initialized")
     
-    # Get or create session
-    if request.session_id and request.session_id in sessions:
-        thread = sessions[request.session_id]
-    else:
-        thread = agent.get_new_thread()
-        session_id = os.urandom(16).hex()
-        sessions[session_id] = thread
+    if not request.message or not request.message.strip():
+        raise HTTPException(status_code=400, detail="Message cannot be empty")
     
-    # Get response
-    response_text = ""
-    async for chunk in agent.run_stream(request.message, thread=thread):
-        if chunk.text:
-            response_text += chunk.text
-    
-    return {
-        "response": response_text,
-        "session_id": session_id if not request.session_id else request.session_id
-    }
+    try:
+        # Get or create session
+        if request.session_id and request.session_id in sessions:
+            thread = sessions[request.session_id]
+            session_id = request.session_id
+        else:
+            thread = agent.get_new_thread()
+            session_id = os.urandom(16).hex()
+            sessions[session_id] = thread
+        
+        # Get response
+        response_text = ""
+        async for chunk in agent.run_stream(request.message, thread=thread):
+            if chunk.text:
+                response_text += chunk.text
+        
+        return {
+            "response": response_text,
+            "session_id": session_id
+        }
+    except Exception as e:
+        print(f"Error processing chat: {e}")
+        raise HTTPException(status_code=500, detail="Error processing your message. Please try again.")
 
 @app.post("/chat/stream")
 async def chat_stream(request: ChatRequest):
@@ -103,4 +121,9 @@ async def root():
 
 @app.get("/health")
 async def health():
-    return {"status": "healthy", "agent_ready": agent is not None}
+    return {
+        "status": "healthy", 
+        "agent_ready": agent is not None,
+        "active_sessions": len(sessions),
+        "service": "Coolman Fuels AI Agent"
+    }
