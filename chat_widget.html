@@ -289,8 +289,10 @@
     </div>
 
     <script>
-        // Production API URL
-        const API_URL = 'https://coolman-ai-agent.onrender.com';
+        // Production API URL - automatically configured
+        const API_URL = window.location.origin.includes('localhost') 
+            ? 'http://localhost:8000' 
+            : 'https://coolman-ai-agent.onrender.com';
         let sessionId = null;
 
         async function initSession() {
