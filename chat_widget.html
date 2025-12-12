@@ -315,12 +315,16 @@
     </div>
 
     <script>
-        // (Logo reverted to original emoji)
-
-        // Production API URL - automatically configured
-        const API_URL = window.location.origin.includes('localhost') 
-            ? 'http://localhost:8000' 
-            : 'https://coolman-ai-agent.onrender.com';
+        // API URL - automatically configured
+        // - If this widget is served by the API (localhost or onrender), use same-origin.
+        // - If embedded/hosted elsewhere (or opened via file://), fall back to the Render API.
+        const FALLBACK_API_URL = 'https://coolman-ai-agent.onrender.com';
+        const HOSTNAME = window.location.hostname;
+        const ORIGIN = window.location.origin;
+        const IS_FILE_OR_NULL_ORIGIN = !ORIGIN || ORIGIN === 'null';
+        const IS_LOCALHOST = HOSTNAME === 'localhost' || HOSTNAME === '127.0.0.1';
+        const IS_RENDER_HOSTED = HOSTNAME.endsWith('onrender.com');
+        const API_URL = (!IS_FILE_OR_NULL_ORIGIN && (IS_LOCALHOST || IS_RENDER_HOSTED)) ? ORIGIN : FALLBACK_API_URL;
         let sessionId = null;
 
         async function initSession() {
