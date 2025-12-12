@@ -43,7 +43,8 @@
         }
         
         .chat-header {
-            background: linear-gradient(135deg, #ED1B2E 0%, #C41E3A 100%);
+            /* Use a solid dark background so the circular logo stands out */
+            background: linear-gradient(135deg, #000000 0%, #111111 100%);
             color: white;
             padding: 20px;
             text-align: center;
@@ -62,14 +63,15 @@
         .company-logo {
             width: 60px;
             height: 60px;
-            background: #000000;
+            background: white; /* revert to original white circle */
             border-radius: 50%;
             margin: 0 auto 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            border: 2px solid white;
+            /* subtle shadow to lift the logo from the header */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
         
         .chat-messages {
