@@ -1,0 +1,15 @@
+name: Keep Render Service Alive
+
+on:
+  schedule:
+    # Run every 10 minutes
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Service
+        run: |
+          curl -f https://coolman-ai-agent.onrender.com/health || exit 0
