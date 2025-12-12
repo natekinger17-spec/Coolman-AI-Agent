@@ -2,8 +2,8 @@ name: Keep Render Service Alive
 
 on:
   schedule:
-    # Run every 10 minutes
-    - cron: '*/10 * * * *'
+    # Run every 10 minutes, Monday-Friday only (weekdays)
+    - cron: '*/10 * * * 1-5'
   workflow_dispatch:
 
 jobs:
