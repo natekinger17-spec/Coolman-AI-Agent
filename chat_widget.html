@@ -96,6 +96,26 @@
             border: 1px solid rgba(255,255,255,0.08);
         }
         .logo-thumb:hover { transform: scale(1.05); }
+
+        /* Admin-only selector hidden by default; can be enabled with ?admin=1 or localStorage */
+        .logo-selector { display: none; }
+
+        /* Drum fill animation - subtle vertical bob and small ripple effect */
+        @keyframes drumBob {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-6px); }
+        }
+        .company-logo svg .drum-fill {
+            transform-origin: center bottom;
+            animation: drumBob 3.5s ease-in-out infinite;
+        }
+        /* small pseudo-wave overlay for visual interest (uses an extra rect inserted via CSS pseudo) */
+        /* Note: CSS pseudo-elements do not apply to SVG elements in all browsers, so we're using a subtle vertical bob animation instead of a pseudo-element wave overlay. */
         
         .chat-messages {
             flex: 1;
@@ -342,13 +362,30 @@
         const logoVariants = {
             drum: `
                 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                        <clipPath id="drumClip">
+                            <rect x="16" y="12" width="32" height="40" rx="6" />
+                        </clipPath>
+                    </defs>
                     <rect x="16" y="12" width="32" height="40" rx="6" fill="#ED1B2E" stroke="#B71C1C" stroke-width="1"/>
+                    <!-- fill rectangle that will animate to simulate liquid level -->
+                    <g clip-path="url(#drumClip)">
+                        <rect class="drum-fill" x="16" y="30" width="32" height="22" fill="#B71C1C" />
+                    </g>
                     <rect x="18" y="8" width="28" height="4" rx="2" fill="#111" />
                 </svg>
             `,
             drum_nozzle: `
                 <svg viewBox="0 0 80 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                        <clipPath id="drumNozzleClip">
+                            <rect x="8" y="12" width="36" height="40" rx="6" />
+                        </clipPath>
+                    </defs>
                     <rect x="8" y="12" width="36" height="40" rx="6" fill="#ED1B2E" stroke="#B71C1C" stroke-width="1"/>
+                    <g clip-path="url(#drumNozzleClip)">
+                        <rect class="drum-fill" x="8" y="30" width="36" height="22" fill="#B71C1C" />
+                    </g>
                     <rect x="10" y="8" width="32" height="4" rx="2" fill="#111" />
                     <path d="M44 28 L70 18 L74 22 L48 32 Z" fill="#111"/>
                     <path d="M46 30 L68 36" stroke="#111" stroke-width="2" stroke-linecap="round"/>
@@ -370,6 +407,27 @@
 
         // set default logo on load
         window.addEventListener('DOMContentLoaded', () => setLogo('drum_nozzle'));
+
+        /* Subtle drum fill animation handled via CSS applied to the injected SVG */
+
+        // Admin-mode: reveal selector only when ?admin=1 or localStorage flag is set
+        function isAdminMode() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                if (params.get('admin') === '1') return true;
+                if (localStorage.getItem('coolman_admin') === 'true') return true;
+            } catch (e) { }
+            return false;
+        }
+
+        // Show selector when admin mode is active and enable simple console hint
+        window.addEventListener('DOMContentLoaded', () => {
+            if (isAdminMode()) {
+                const selector = document.getElementById('logoSelector');
+                if (selector) selector.style.display = 'flex';
+                console.info('Coolman AI Agent: Admin mode enabled - logo selector visible. To persist, run: localStorage.setItem("coolman_admin","true")');
+            }
+        });
 
         // Production API URL - automatically configured
         const API_URL = window.location.origin.includes('localhost') 
