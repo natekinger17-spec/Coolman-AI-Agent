@@ -75,47 +75,7 @@
         }
 
         /* Slightly larger logo to better fill the circular background */
-        .company-logo svg { width: 56px; height: 56px; }
-
-        /* Logo selector (thumbnail buttons) */
-        .logo-selector {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 6px;
-        }
-        .logo-thumb {
-            width: 34px;
-            height: 34px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .logo-thumb:hover { transform: scale(1.05); }
-
-        /* Admin-only selector hidden by default; can be enabled with ?admin=1 or localStorage */
-        .logo-selector { display: none; }
-
-        /* Drum fill animation - subtle vertical bob and small ripple effect */
-        @keyframes drumBob {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-2px); }
-            100% { transform: translateY(0); }
-        }
-        @keyframes wave {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-6px); }
-        }
-        .company-logo svg .drum-fill {
-            transform-origin: center bottom;
-            animation: drumBob 3.5s ease-in-out infinite;
-        }
-        /* small pseudo-wave overlay for visual interest (uses an extra rect inserted via CSS pseudo) */
-        /* Note: CSS pseudo-elements do not apply to SVG elements in all browsers, so we're using a subtle vertical bob animation instead of a pseudo-element wave overlay. */
+        .company-logo svg { width: 58px; height: 58px; }
         
         .chat-messages {
             flex: 1;
@@ -176,42 +136,6 @@
             border-bottom-left-radius: 5px;
             max-width: 80px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .typing-indicator span {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #999;
-            border-radius: 50%;
-            margin: 0 2px;
-            animation: bounce 1.4s infinite ease-in-out;
-        }
-        
-        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-        
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-        
-        .chat-input-container {
-            padding: 15px 20px;
-            background: white;
-            border-top: 1px solid #eee;
-            display: flex;
-            gap: 10px;
-        }
-        
-        #messageInput {
-            flex: 1;
-            padding: 12px 18px;
-            border: 2px solid #eee;
-            border-radius: 25px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s;
         }
         
         #messageInput:focus {
@@ -286,29 +210,28 @@
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <div class="company-logo" id="companyLogo"></div>
-            <div class="logo-selector" id="logoSelector" aria-hidden="false" title="Choose logo">
-                <div class="logo-thumb" onclick="setLogo('drum')" title="Drum"> 
-                    <!-- small drum thumbnail -->
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="6" y="5" width="12" height="14" rx="2" stroke="#ED1B2E" stroke-width="1.2" fill="#ED1B2E"/>
-                    </svg>
-                </div>
-                <div class="logo-thumb" onclick="setLogo('drum_nozzle')" title="Drum + Nozzle">
-                    <!-- small drum + nozzle thumbnail -->
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="4" y="5" width="10" height="14" rx="2" stroke="#ED1B2E" stroke-width="1" fill="#ED1B2E"/>
-                        <path d="M14 12h6v2h-6z" fill="#ED1B2E"/>
-                        <path d="M18 10l3-2 1 1-3 2z" fill="#111"/>
-                    </svg>
-                </div>
-                <div class="logo-thumb" onclick="setLogo('nozzle')" title="Nozzle">
-                    <!-- small nozzle thumbnail -->
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 12h10l6-4v6l-6 4H3z" fill="#ED1B2E"/>
-                        <circle cx="18" cy="8" r="1.2" fill="#111"/>
-                    </svg>
-                </div>
+            <div class="company-logo" aria-hidden="true">
+                <!-- Drum + fuel nozzle logo (designed to read clearly at small size) -->
+                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fuel drum and nozzle">
+                    <!-- hose -->
+                    <path d="M30 40 C36 40 38 34 44 34" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+
+                    <!-- drum -->
+                    <rect x="10" y="14" width="22" height="36" rx="5" fill="#ED1B2E" stroke="#111" stroke-width="2"/>
+                    <rect x="12" y="11" width="18" height="5" rx="2.5" fill="#111"/>
+                    <path d="M12 24 H30" stroke="#111" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+                    <path d="M12 32 H30" stroke="#111" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+                    <path d="M12 40 H30" stroke="#111" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+
+                    <!-- nozzle body -->
+                    <path d="M43 18 H53 a4 4 0 0 1 4 4 v6 a4 4 0 0 1-4 4 h-2 l-6 5 v-5 h-2 a4 4 0 0 1-4-4 v-6 a4 4 0 0 1 4-4 z" fill="#111"/>
+                    <!-- nozzle spout -->
+                    <path d="M55 16 h5 a2 2 0 0 1 2 2 v4 h-7 z" fill="#111"/>
+                    <!-- trigger accent (red) -->
+                    <path d="M46 30 v9" stroke="#ED1B2E" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- small highlight to separate nozzle shapes -->
+                    <path d="M44.5 22.5 H54" stroke="#fff" stroke-opacity="0.18" stroke-width="2" stroke-linecap="round"/>
+                </svg>
             </div>
             <h1>Coolman Fuels</h1>
             <p>AI Customer Support</p>
@@ -358,76 +281,7 @@
     </div>
 
     <script>
-        // ---------- Logo variants (inline SVG) ----------
-        const logoVariants = {
-            drum: `
-                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <defs>
-                        <clipPath id="drumClip">
-                            <rect x="16" y="12" width="32" height="40" rx="6" />
-                        </clipPath>
-                    </defs>
-                    <rect x="16" y="12" width="32" height="40" rx="6" fill="#ED1B2E" stroke="#B71C1C" stroke-width="1"/>
-                    <!-- fill rectangle that will animate to simulate liquid level -->
-                    <g clip-path="url(#drumClip)">
-                        <rect class="drum-fill" x="16" y="30" width="32" height="22" fill="#B71C1C" />
-                    </g>
-                    <rect x="18" y="8" width="28" height="4" rx="2" fill="#111" />
-                </svg>
-            `,
-            drum_nozzle: `
-                <svg viewBox="0 0 80 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <defs>
-                        <clipPath id="drumNozzleClip">
-                            <rect x="8" y="12" width="36" height="40" rx="6" />
-                        </clipPath>
-                    </defs>
-                    <rect x="8" y="12" width="36" height="40" rx="6" fill="#ED1B2E" stroke="#B71C1C" stroke-width="1"/>
-                    <g clip-path="url(#drumNozzleClip)">
-                        <rect class="drum-fill" x="8" y="30" width="36" height="22" fill="#B71C1C" />
-                    </g>
-                    <rect x="10" y="8" width="32" height="4" rx="2" fill="#111" />
-                    <path d="M44 28 L70 18 L74 22 L48 32 Z" fill="#111"/>
-                    <path d="M46 30 L68 36" stroke="#111" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            `,
-            nozzle: `
-                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M6 36 L26 22 L38 34 L18 48 z" fill="#ED1B2E" stroke="#B71C1C" stroke-width="1" />
-                    <rect x="36" y="20" width="18" height="6" rx="2" fill="#111" />
-                    <circle cx="46" cy="18" r="2" fill="#ED1B2E" />
-                </svg>
-            `
-        };
-
-        function setLogo(variant) {
-            const el = document.getElementById('companyLogo');
-            el.innerHTML = logoVariants[variant] || logoVariants.drum_nozzle;
-        }
-
-        // set default logo on load
-        window.addEventListener('DOMContentLoaded', () => setLogo('drum_nozzle'));
-
-        /* Subtle drum fill animation handled via CSS applied to the injected SVG */
-
-        // Admin-mode: reveal selector only when ?admin=1 or localStorage flag is set
-        function isAdminMode() {
-            try {
-                const params = new URLSearchParams(window.location.search);
-                if (params.get('admin') === '1') return true;
-                if (localStorage.getItem('coolman_admin') === 'true') return true;
-            } catch (e) { }
-            return false;
-        }
-
-        // Show selector when admin mode is active and enable simple console hint
-        window.addEventListener('DOMContentLoaded', () => {
-            if (isAdminMode()) {
-                const selector = document.getElementById('logoSelector');
-                if (selector) selector.style.display = 'flex';
-                console.info('Coolman AI Agent: Admin mode enabled - logo selector visible. To persist, run: localStorage.setItem("coolman_admin","true")');
-            }
-        });
+        // (Logo reverted to original emoji)
 
         // Production API URL - automatically configured
         const API_URL = window.location.origin.includes('localhost') 
